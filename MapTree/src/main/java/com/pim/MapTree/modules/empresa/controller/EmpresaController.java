@@ -1,26 +1,33 @@
 package com.pim.MapTree.modules.empresa.controller;
 
 import com.pim.MapTree.modules.empresa.entity.Empresa;
+import com.pim.MapTree.modules.empresa.useCases.EmpresaUseCase;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/empresa")
 public class EmpresaController {
     @Autowired
-    private EmpresaController empresaController;
+    private EmpresaUseCase empresaUseCase;
 
     @GetMapping("/")
-    public ResponseEntity<String> getEmpresas() {
-        return ResponseEntity.ok().body("Empresas");
+    public ResponseEntity<List<Empresa>> getEmpresas() {
+        return empresaUseCase.getEmpresas();
     }
 
+    //retorna um objeto porque pode ter sucesso ou falha
     @PostMapping("/")
-    public ResponseEntity<String> createEmpresa(Empresa empresa) {
-        return ResponseEntity.ok().body(empresaController.createEmpresa(empresa).getBody());
+    public ResponseEntity<Object> createEmpresa(@Valid @RequestBody Empresa empresa) {
+        try{
+            var result = this.empresaUseCase.createEmpresa(empresa);
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

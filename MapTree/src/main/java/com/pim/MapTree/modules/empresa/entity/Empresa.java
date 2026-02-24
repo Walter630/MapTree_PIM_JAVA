@@ -1,19 +1,26 @@
 package com.pim.MapTree.modules.empresa.entity;
 
-import jakarta.validation.Valid;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 @Data
-@Valid
+@Entity(name = "empresa")
 public class Empresa {
-    @NotNull
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank(message = "O nome é obrigatorio")
@@ -30,6 +37,9 @@ public class Empresa {
 
     @Email(message = "Email esta invalido")
     private String email;
-    private Date dataCadastro;
-    private Date dataAlteracao;
+    @CreationTimestamp
+    private LocalDateTime creatAt;
+    @UpdateTimestamp
+    private LocalDateTime dataAlteracao;
+
 }
