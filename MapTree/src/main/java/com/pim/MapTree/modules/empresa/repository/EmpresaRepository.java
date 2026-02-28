@@ -12,4 +12,6 @@ public interface EmpresaRepository extends JpaRepository<Empresa, UUID> {
     // Optional serve para evitar null pointer exception e nos da opcao de verificar se existe ou nao
     Optional<Empresa> findByNomeOrEmail(String nome, String email);
     Optional<Empresa> findByCnpjOrTelefone(String cnpj, String telefone);
+
+    Empresa delete(Optional<Empresa> empresa);
 }
