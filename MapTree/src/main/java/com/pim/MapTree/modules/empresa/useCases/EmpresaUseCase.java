@@ -37,8 +37,8 @@ public class EmpresaUseCase {
                 .orElseThrow(() -> new RuntimeException("Empresa nao encontrada"));
     }
 
-    public Empresa deleteEmpresa(UUID id) {
-         var empresa = empresaRepository.findById(id);
-         return empresaRepository.delete(empresa);
+    public void deleteEmpresa(UUID id) {
+         var empress = empresaRepository.findById(id);
+         empresaRepository.delete(empress);
     }
 }

@@ -53,13 +53,9 @@ public class EmpresaController {
         }
     }
 
+    //PathVariable serve para
     @DeleteMapping("/{id}")
-    public ResponseEntity<Empresa> deleteEmpresa(@PathVariable UUID id) {
-        try {
-            var empresa = empresaUseCase.deleteEmpresa(id);
-            return ResponseEntity.ok(empresa);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public void deleteEmpresa(@PathVariable UUID id) {
+        this.empresaUseCase.deleteEmpresa(id);
     }
 }
