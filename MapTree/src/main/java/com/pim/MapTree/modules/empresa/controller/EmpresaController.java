@@ -54,8 +54,5 @@ public class EmpresaController {
     }
 
     //PathVariable serve para
-    @DeleteMapping("/{id}")
-    public void deleteEmpresa(@PathVariable UUID id) {
-        this.empresaUseCase.deleteEmpresa(id);
-    }
+
 }

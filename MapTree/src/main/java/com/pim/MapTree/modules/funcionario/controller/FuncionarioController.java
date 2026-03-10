@@ -1,6 +1,5 @@
 package com.pim.MapTree.modules.funcionario.controller;
 
-
 import com.pim.MapTree.modules.funcionario.dto.FuncionarioDTO;
 import com.pim.MapTree.modules.funcionario.entity.Funcionario;
 import com.pim.MapTree.modules.funcionario.useCase.FuncionarioUseCase;
@@ -33,7 +32,7 @@ public class FuncionarioController {
             var func = this.funcionarioUseCase.execute(result);
             return ResponseEntity.status(HttpStatus.CREATED).body(func);
         } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
@@ -42,15 +41,7 @@ public class FuncionarioController {
         return this.funcionarioUseCase.findAll();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteFuncionario(@Valid @RequestBody UUID id) {
-        try {
-            this.funcionarioUseCase.deleteFuncionario(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
-    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateFuncionario(@Valid @RequestBody FuncionarioDTO dto, @PathVariable UUID id) {

@@ -13,5 +13,4 @@ public interface EmpresaRepository extends JpaRepository<Empresa, UUID> {
     Optional<Empresa> findByNomeOrEmail(String nome, String email);
     Optional<Empresa> findByCnpjOrTelefone(String cnpj, String telefone);
 
-    void delete(Optional<Empresa> empress);
 }

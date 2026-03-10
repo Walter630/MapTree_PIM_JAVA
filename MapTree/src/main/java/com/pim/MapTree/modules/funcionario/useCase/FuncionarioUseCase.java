@@ -6,6 +6,7 @@ import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,21 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FuncionarioUseCase {
+
     private final FuncionarioRepository funcionarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Funcionario execute(Funcionario funcionario) {
         try{
             this.funcionarioRepository.findByCpfAndEmail(funcionario.getCpf(), funcionario.getEmail())
-                    .ifPresent(e -> {throw new RuntimeException("Cpf ou Email ja existente"); });
+                    .ifPresent(e -> {throw new RuntimeException("Cpf ou Email ja existente");
+                    });
+
+            //Crio nova senha criptografada
+            var password = passwordEncoder.encode(funcionario.getPassword());
+            //seto essa nova senha criptografada
+            funcionario.setPassword(password);
 
             return funcionarioRepository.save(funcionario);
         } catch(Exception e){
@@ -30,12 +39,6 @@ public class FuncionarioUseCase {
 
     public List<Funcionario> findAll() {
         return funcionarioRepository.findAll();
-    }
-
-    public void deleteFuncionario(UUID id) {
-        var funcionario = funcionarioRepository.findById(id).orElse(null);
-        assert funcionario != null;
-        funcionarioRepository.delete(funcionario);
     }
 
     public Funcionario updateFuncionario(Funcionario funcionario) {
