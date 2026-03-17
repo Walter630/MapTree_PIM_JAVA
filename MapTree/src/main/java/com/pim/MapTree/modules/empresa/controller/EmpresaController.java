@@ -53,6 +53,22 @@ public class EmpresaController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateEmpresa(@PathVariable UUID id, @Valid @RequestBody EmpresaDTO data) {
+        try{
+            var empresaEntity = Empresa.builder()
+                    .nome(data.nome())
+                    .email(data.email())
+                    .endereco(data.endereco())
+                    .telefone(data.telefone())
+                    .cnpj(data.cnpj())
+                    .build();
+            return ResponseEntity.ok().body(empresaEntity);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     //PathVariable serve para
 
 }
