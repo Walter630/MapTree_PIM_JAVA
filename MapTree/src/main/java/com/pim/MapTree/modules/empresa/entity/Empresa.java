@@ -21,9 +21,12 @@ public class Empresa {
     private UUID id;
 
     private String nome;
+    @Column(unique = true)
     private String cnpj;
     private String endereco;
+    @Column(unique = true)
     private String telefone;
+    @Column(unique = true)
     private String email;
 
     @CreationTimestamp

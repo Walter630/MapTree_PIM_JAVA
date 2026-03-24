@@ -20,9 +20,12 @@ public class Funcionario {
     private UUID id;
 
     private String name;
+    @Column(unique = true)
     private String cpf;
+    @Column(unique = true)
     private String email;
     private String password;
+    @Column(unique = true)
     private String phone;
 
     @CreationTimestamp
