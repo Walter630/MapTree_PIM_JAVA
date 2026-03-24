@@ -10,23 +10,35 @@ services:
     env_file:
       - .env               # ← lê as variáveis do .env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
+    networks:
+      - app-network
 
   # ─── PostgreSQL ──────────────────────────────────────────
   postgres:
     container_name: map-tree
     image: postgres:16-alpine    #mais estavel para o time e fixo
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=maptree_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d maptree_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     #O restart serve para
     restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
