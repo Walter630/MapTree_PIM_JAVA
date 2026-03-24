@@ -1,12 +1,32 @@
-version: '3.8'
+version: '3.9'
 
 services:
+
+  # ─── Sua aplicação ───────────────────────────────────────
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env               # ← lê as variáveis do .env
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # ─── PostgreSQL ──────────────────────────────────────────
   postgres:
     container_name: map-tree
-    image: postgres
+    image: postgres:16-alpine    #mais estavel para o time e fixo
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=maptree_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    #O restart serve para
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
