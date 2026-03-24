@@ -21,9 +21,20 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/funcionario/").permitAll()
-                        .requestMatchers("/empresa/").permitAll()
-                            .requestMatchers("/auth/login").permitAll();
+                    // ✅ Rotas públicas — não precisam de token
+                    auth.requestMatchers(
+                                    "/auth/login",
+                                    "/auth/register",
+                                    "/auth/refreshToken",
+                                    "/funcionario/",
+                                    "/empresa/",
+                                    // ✅ Swagger — libera tudo relacionado
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/api-docs/**",
+                                    "/v3/api-docs/**"
+                            ).permitAll();
+                    // 🔒 Tudo mais exige autenticação
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
