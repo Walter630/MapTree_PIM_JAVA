@@ -18,8 +18,8 @@
             return new OpenAPI()
                     // ─── Informações gerais da API ───────────────────────
                     .info(new Info()
-                            .title("Gestão de Contas API")
-                            .description("API para gerenciamento de dívidas e contas")
+                            .title("Maptree API")
+                            .description("API para gerenciamento do MapTree")
                             .version("1.0.0")
                     )
                     // ─── Define que a API usa JWT Bearer ─────────────────

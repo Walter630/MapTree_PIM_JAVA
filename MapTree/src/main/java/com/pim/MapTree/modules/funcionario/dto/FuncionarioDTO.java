@@ -9,6 +9,7 @@ public record FuncionarioDTO(
         @NotBlank(message = "Nome é obrigatorio")
         String name,
 
+        @NotNull
         @Email(message = "O campo email esta invalido")
         String email,
 

@@ -20,6 +20,8 @@ services:
   postgres:
     container_name: map-tree
     image: postgres:16-alpine    #mais estavel para o time e fixo
+    ports:
+      - "5433:5432"   # <- adiciona isso
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
