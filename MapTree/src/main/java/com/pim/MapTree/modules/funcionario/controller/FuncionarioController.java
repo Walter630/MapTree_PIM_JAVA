@@ -22,14 +22,7 @@ public class FuncionarioController {
     @PostMapping("/")
     public ResponseEntity<Object> saveFuncionario(@Valid @RequestBody FuncionarioDTO dto) {
         try{
-            var result = Funcionario.builder()
-                    .email(dto.email())
-                    .name(dto.name())
-                    .cpf(dto.cpf())
-                    .password(dto.password())
-                    .phone(dto.phone())
-                    .build();
-            var func = this.funcionarioUseCase.execute(result);
+            var func = this.funcionarioUseCase.execute(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(func);
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -37,24 +30,15 @@ public class FuncionarioController {
     }
 
     @GetMapping("/")
-    public List<Funcionario> getFuncionario() {
-        return this.funcionarioUseCase.findAll();
+    public ResponseEntity<List<FuncionarioDTO>> getFuncionario() {
+        var list = this.funcionarioUseCase.findAll();
+        return ResponseEntity.ok(list);
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateFuncionario(@Valid @RequestBody FuncionarioDTO dto, @PathVariable UUID id) {
         try{
-            var result = Funcionario.builder()
-                    .id(id)
-                    .email(dto.email())
-                    .name(dto.name())
-                    .cpf(dto.cpf())
-                    .password(dto.password())
-                    .phone(dto.phone())
-                    .build();
-            var updated = this.funcionarioUseCase.updateFuncionario(result);
+            var updated = this.funcionarioUseCase.updateFuncionario(id, dto);
             return ResponseEntity.ok(updated);
         }  catch (Exception ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

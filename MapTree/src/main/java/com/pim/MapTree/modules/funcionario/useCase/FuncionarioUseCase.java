@@ -2,6 +2,7 @@ package com.pim.MapTree.modules.funcionario.useCase;
 
 import com.pim.MapTree.modules.funcionario.dto.FuncionarioDTO;
 import com.pim.MapTree.modules.funcionario.entity.Funcionario;
+import com.pim.MapTree.modules.funcionario.mapper.FuncionarioMapper;
 import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -13,39 +14,50 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class FuncionarioUseCase {
 
     private final FuncionarioRepository funcionarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final FuncionarioMapper funcionarioMapper;
 
-    @Transactional
-    public Funcionario execute(Funcionario funcionario) {
+    public FuncionarioUseCase(FuncionarioRepository funcionarioRepository, FuncionarioMapper funcionarioMapper) {
+        this.funcionarioRepository = funcionarioRepository;
+        this.funcionarioMapper = funcionarioMapper;
+    }
+
+    @Transactional //usar ele nos save, delete e update que altera o banco de dados
+    public FuncionarioDTO execute(FuncionarioDTO funcionario) {
         try{
-            this.funcionarioRepository.findByCpfAndEmail(funcionario.getCpf(), funcionario.getEmail())
+            this.funcionarioRepository.findByCpfOrEmail(funcionario.cpf(), funcionario.email())
                     .ifPresent(e -> {throw new RuntimeException("Cpf ou Email ja existente");
                     });
+            var entity = funcionarioMapper.toEntity(funcionario);
+            var savedEntity = this.funcionarioRepository.save(entity);
 
-            //Crio nova senha criptografada
-            var password = passwordEncoder.encode(funcionario.getPassword());
-            //seto essa nova senha criptografada
-            funcionario.setPassword(password);
-
-            return funcionarioRepository.save(funcionario);
+            return funcionarioMapper.toDTO(savedEntity);
         } catch(Exception e){
             throw new RuntimeException(e);
         }
     }
 
-    public List<Funcionario> findAll() {
-        return funcionarioRepository.findAll();
+    public List<FuncionarioDTO> findAll() {
+        var listFuncionario = this.funcionarioRepository.findAll();
+        return funcionarioMapper.toDTOList(listFuncionario);
     }
 
-    public Funcionario updateFuncionario(Funcionario funcionario) {
+    @Transactional
+    public FuncionarioDTO updateFuncionario(UUID id, FuncionarioDTO funcionario) {
         // 1. Verifica se o funcionário existe no banco de dados
-        if (!funcionarioRepository.existsById(funcionario.getId())) {
-            throw new EntityNotFoundException("Funcionário com ID " + funcionario.getId() + " não encontrado.");
-        }
-        return funcionarioRepository.save(funcionario);
+        var entityExisting = this.funcionarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Nao encontrado"));
+
+        funcionarioMapper.toDTOUpdate(funcionario, entityExisting);
+        //salvo a entidade e returno transformando em dto
+        var savedEntity = this.funcionarioRepository.save(entityExisting);
+        return funcionarioMapper.toDTO(savedEntity);
+    }
+
+    @Transactional
+    public void deleteFuncionario(UUID id) {
+        this.funcionarioRepository.deleteById(id);
     }
 }

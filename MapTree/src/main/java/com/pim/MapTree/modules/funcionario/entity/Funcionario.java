@@ -1,5 +1,6 @@
 package com.pim.MapTree.modules.funcionario.entity;
 
+import com.pim.MapTree.modules.user.entity.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,9 +32,14 @@ public class Funcionario {
     @Column(unique = true)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public Funcionario(String name, String cpf, String email, String password, String phone,  Roles role) {}
 }
