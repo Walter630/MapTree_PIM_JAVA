@@ -21,12 +21,12 @@ public class Empresa {
     private UUID id;
 
     private String nome;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 14)
     private String cnpj;
     private String endereco;
     @Column(unique = true)
     private String telefone;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @CreationTimestamp
@@ -34,5 +34,5 @@ public class Empresa {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime dataAlteracao;
+    private LocalDateTime updatedAt;
 }

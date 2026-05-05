@@ -1,6 +1,6 @@
-package com.pim.MapTree.security;
+package com.pim.MapTree.infra.security;
 
-import com.pim.MapTree.providers.JWTProvider;
+import com.pim.MapTree.infra.providers.JWTProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

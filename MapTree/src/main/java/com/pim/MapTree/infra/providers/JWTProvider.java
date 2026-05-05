@@ -1,4 +1,4 @@
-package com.pim.MapTree.providers;
+package com.pim.MapTree.infra.providers;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

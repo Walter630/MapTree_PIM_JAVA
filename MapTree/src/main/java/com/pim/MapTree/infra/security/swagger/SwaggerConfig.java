@@ -1,4 +1,4 @@
-    package com.pim.MapTree.security.swagger;
+    package com.pim.MapTree.infra.security.swagger;
 
     import io.swagger.v3.oas.models.Components;
     import io.swagger.v3.oas.models.OpenAPI;

@@ -5,23 +5,19 @@ import com.pim.MapTree.modules.funcionario.entity.Funcionario;
 import com.pim.MapTree.modules.funcionario.mapper.FuncionarioMapper;
 import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
 import com.pim.MapTree.modules.user.entity.Roles;
-import jakarta.persistence.Column;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 

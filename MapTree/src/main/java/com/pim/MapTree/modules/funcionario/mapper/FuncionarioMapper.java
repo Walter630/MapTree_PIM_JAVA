@@ -5,12 +5,13 @@ import com.pim.MapTree.modules.funcionario.entity.Funcionario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring") //caso deixa um parametro em branco sem ser mapeado ele mostra o erro
 public abstract class FuncionarioMapper {
 
     @Autowired
@@ -30,6 +31,9 @@ public abstract class FuncionarioMapper {
     @Mapping(target = "id", ignore = true) // Nunca atualizamos o ID
     @Mapping(target = "password", ignore = true) //senha trata separada
     public abstract void toDTOUpdate(FuncionarioDTO dto, @MappingTarget Funcionario entity);
+
+
+
 //    public static Funcionario toEntity(FuncionarioDTO dto, PasswordEncoder passwordEncoder) {
 //        var entity = new Funcionario();
 //        entity.setName(dto.name());

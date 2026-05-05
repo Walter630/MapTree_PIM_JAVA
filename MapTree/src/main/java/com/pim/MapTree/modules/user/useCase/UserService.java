@@ -2,14 +2,13 @@ package com.pim.MapTree.modules.user.useCase;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
+import com.pim.MapTree.infra.exception.user.UserNotFound;
 import com.pim.MapTree.modules.user.dto.UserDTO;
 import com.pim.MapTree.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
 import com.pim.MapTree.modules.user.entity.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class UserService {
     public String execute(UserDTO userDTO) throws AuthenticationException {
         //verifica se existe um nome do funcionario
         var user = this.userRepository.findByName(userDTO.getName()).orElseThrow(
-                () -> new UsernameNotFoundException("User not Found"));
+                () -> new UserNotFound("User not Found"));
         // verificar a senha se sao iguais
         var passwordMatches = this.passwordEncoder.matches(userDTO.getPassword(), user.getPassword());
         // se nao for igual -> erro

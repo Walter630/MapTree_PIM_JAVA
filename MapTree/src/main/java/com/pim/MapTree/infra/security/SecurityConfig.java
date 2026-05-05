@@ -1,4 +1,4 @@
-package com.pim.MapTree.security;
+package com.pim.MapTree.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

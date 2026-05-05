@@ -1,13 +1,10 @@
 package com.pim.MapTree.modules.funcionario.useCase;
 
 import com.pim.MapTree.modules.funcionario.dto.FuncionarioDTO;
-import com.pim.MapTree.modules.funcionario.entity.Funcionario;
 import com.pim.MapTree.modules.funcionario.mapper.FuncionarioMapper;
 import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

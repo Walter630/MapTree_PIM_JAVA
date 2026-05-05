@@ -31,10 +31,9 @@ public class EmpresaController {
             @ApiResponse(responseCode = "400", description = "Nenhuma empresa encontrada")
     })
     @GetMapping("/")
-    public ResponseEntity<List<Empresa>> getEmpresas() {
-        // O UseCase agora retorna a lista, e o Controller decide o status OK
-        var empresas = empresaUseCase.getEmpresas();
-        return ResponseEntity.ok(empresas);
+    public ResponseEntity<List<EmpresaDTO>> getEmpresas() {
+            var empresas = empresaUseCase.getEmpresas();
+            return ResponseEntity.ok(empresas);
     }
 
     //────────────────────────────GET_ENTERPRISE_ID─────────────────────────────────────
@@ -49,30 +48,15 @@ public class EmpresaController {
 
     @PostMapping("/")
     public ResponseEntity<Object> createEmpresa(@Valid @RequestBody EmpresaDTO data) {
-        try {
-            // Convertemos o Record para Entity usando o @Builder que colocamos na Empresa
-            var empresaEntity = Empresa.builder()
-                    .nome(data.nome())
-                    .cnpj(data.cnpj())
-                    .email(data.email())
-                    .endereco(data.endereco())
-                    .telefone(data.telefone())
-                    .build();
-
-            var result = this.empresaUseCase.createEmpresa(empresaEntity);
-
-            // 201 Created é mais semântico que 200 OK para criações
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        var result = this.empresaUseCase.createEmpresa(data);
+        // 201 Created
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     //────────────────────────────UPDATE_ENTERPRISE─────────────────────────────────────
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateEmpresa(@PathVariable UUID id, @Valid @RequestBody EmpresaDTO data) {
-        try{
             var empresaEntity = Empresa.builder()
                     .nome(data.nome())
                     .email(data.email())
@@ -81,11 +65,6 @@ public class EmpresaController {
                     .cnpj(data.cnpj())
                     .build();
             return ResponseEntity.ok().body(empresaEntity);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
-
     //PathVariable serve para
-
 }
