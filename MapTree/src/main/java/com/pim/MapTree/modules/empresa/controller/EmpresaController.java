@@ -39,7 +39,7 @@ public class EmpresaController {
     //────────────────────────────GET_ENTERPRISE_ID─────────────────────────────────────
 
     @GetMapping("/{id}")
-    public ResponseEntity<Empresa> getEmpresa(@PathVariable UUID id) {
+    public ResponseEntity<EmpresaDTO> getEmpresa(@PathVariable UUID id) {
         var empresa = empresaUseCase.getEmpresaId(id);
         return ResponseEntity.ok(empresa);
     }
