@@ -5,7 +5,6 @@ import com.pim.MapTree.modules.funcionario.entity.Funcionario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

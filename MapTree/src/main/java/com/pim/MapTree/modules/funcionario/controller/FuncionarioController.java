@@ -19,17 +19,13 @@ public class FuncionarioController {
 
     private final FuncionarioUseCase funcionarioUseCase;
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Object> saveFuncionario(@Valid @RequestBody FuncionarioDTO dto) {
-        try{
-            var func = this.funcionarioUseCase.execute(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(func);
-        } catch (Exception ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        var func = this.funcionarioUseCase.execute(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(func);
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<FuncionarioDTO>> getFuncionario() {
         var list = this.funcionarioUseCase.findAll();
         return ResponseEntity.ok(list);
@@ -37,11 +33,13 @@ public class FuncionarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateFuncionario(@Valid @RequestBody FuncionarioDTO dto, @PathVariable UUID id) {
-        try{
-            var updated = this.funcionarioUseCase.updateFuncionario(id, dto);
-            return ResponseEntity.ok(updated);
-        }  catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+        var updated = this.funcionarioUseCase.updateFuncionario(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteFuncionario(@PathVariable UUID id) {
+        this.funcionarioUseCase.deleteFuncionario(id);
+        return ResponseEntity.noContent().build();
     }
 }

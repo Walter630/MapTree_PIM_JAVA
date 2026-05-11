@@ -23,18 +23,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     // ✅ Rotas públicas — não precisam de token
                     auth.requestMatchers(
-                                    "/auth/login",
-                                    "/auth/register",
-                                    "/auth/refreshToken",
-                                    "/funcionario/",
-                                    "/empresa/",
-                                    // ✅ Swagger — libera tudo relacionado
-                                    "/swagger-ui/**",
-                                    "/swagger-ui.html",
-                                    "/api-docs/**",
-                                    "/api-docs",
-                                    "/v3/api-docs/**"
-                            ).permitAll();
+                            "/auth/login",
+                            "/auth/register",
+                            "/auth/refreshToken",
+                            "/funcionario/**",
+                            "/empresa/**",
+                            // ✅ Swagger — libera tudo relacionado
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/api-docs/**",
+                            "/api-docs",
+                            "/v3/api-docs/**"
+                    ).permitAll();
                     // 🔒 Tudo mais exige autenticação
                     auth.anyRequest().authenticated();
                 })

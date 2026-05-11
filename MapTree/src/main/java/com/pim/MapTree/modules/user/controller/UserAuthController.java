@@ -1,6 +1,7 @@
 package com.pim.MapTree.modules.user.controller;
 
 import com.pim.MapTree.modules.user.dto.UserDTO;
+import com.pim.MapTree.modules.user.entity.User;
 import com.pim.MapTree.modules.user.useCase.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,10 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,12 +31,8 @@ public class UserAuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<String> create(@RequestBody UserDTO authFuncionarioDTO) {
-        try{
-            var result = this.userService.execute(authFuncionarioDTO);
-            return ResponseEntity.ok().body(result);
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        var token = this.userService.execute(authFuncionarioDTO);
+        return ResponseEntity.ok(token);
     }
 
     //────────────────────────────REGISTER─────────────────────────────────────
@@ -46,11 +42,13 @@ public class UserAuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO authFuncionarioDTO) {
-        try{
-            var result = this.userService.register(authFuncionarioDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        var result = this.userService.register(authFuncionarioDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+    //────────────────────────────LIST─────────────────────────────────────
+    @GetMapping()
+    public ResponseEntity<List<User>> findAll() {
+        var result = this.userService.findAll();
+        return ResponseEntity.ok().body(result);
     }
 }
