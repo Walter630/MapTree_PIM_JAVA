@@ -20,22 +20,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false, name = "email")
+    private String email;
     private String password;
 
     private Roles role;
-
-    public User(UserDTO userDTO) {
-        this.name = userDTO.getName();
-        this.password = userDTO.getPassword();
-        this.role = getRole();
-    }
-
-    private static User toEntity(UserDTO userDTO) {
-        return User.builder()
-                .name(userDTO.getName())
-                .password(userDTO.getPassword())
-                .build();
-    }
 }

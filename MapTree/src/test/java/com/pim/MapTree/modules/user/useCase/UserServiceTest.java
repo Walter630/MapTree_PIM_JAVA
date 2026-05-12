@@ -41,7 +41,7 @@ class UserServiceTest {
         List<User> result = userService.findAll();
         assertThat(result)
                 .hasSize(1)
-                .extracting(User::getName)
+                .extracting(User::getEmail)
                 .containsExactly("walter");// confirma que o repo foi chamado
     }
 

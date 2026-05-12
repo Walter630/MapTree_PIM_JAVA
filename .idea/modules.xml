@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MapTree/MapTree.iml" filepath="$PROJECT_DIR$/MapTree/MapTree.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MapTree_PIM_JAVA.iml" filepath="$PROJECT_DIR$/.idea/MapTree_PIM_JAVA.iml" />
     </modules>
   </component>

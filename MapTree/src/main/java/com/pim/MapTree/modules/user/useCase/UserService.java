@@ -35,7 +35,7 @@ public class UserService {
     @Transactional
     public String execute(UserDTO userDTO) {
         //verifica se existe um nome do funcionário
-        var user = this.userRepository.findByName(userDTO.getName()).orElseThrow(
+        var user = this.userRepository.findByEmail(userDTO.getEmail()).orElseThrow(
                 () -> new UserNotFound("User not Found"));
         // verificar a senha se são iguais
         var passwordMatches = this.passwordEncoder.matches(userDTO.getPassword(), user.getPassword());
@@ -54,7 +54,7 @@ public class UserService {
 
     @Transactional
     public UserDTO register(UserDTO userDTO) {
-        userRepository.findByName(userDTO.getName()).ifPresent(f -> {
+        userRepository.findByEmail(userDTO.getEmail()).ifPresent(f -> {
             throw new UserExisting("User is existing");
         });
 
