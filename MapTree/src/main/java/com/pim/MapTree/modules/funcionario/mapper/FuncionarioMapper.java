@@ -18,6 +18,7 @@ public abstract class FuncionarioMapper {
 
     // 2. Usamos o 'expression' para dizer ao MapStruct:
     // "Na hora de preencher o campo password, execute este código Java"
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.password()))")
     public abstract Funcionario toEntity(FuncionarioDTO dto);
 

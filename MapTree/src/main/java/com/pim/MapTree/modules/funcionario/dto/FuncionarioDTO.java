@@ -1,13 +1,15 @@
 package com.pim.MapTree.modules.funcionario.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pim.MapTree.modules.user.entity.Roles;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.util.UUID;
 
 public record FuncionarioDTO(
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        UUID id,
+
         @NotBlank(message = "Nome é obrigatorio")
         String name,
 
@@ -23,4 +25,7 @@ public record FuncionarioDTO(
         String phone,
         Roles role
         ) {
+        public FuncionarioDTO(String name, String email, String cpf, String password, String phone, Roles role) {
+                this(null, name, email, cpf, password, phone, role);
+        }
 }

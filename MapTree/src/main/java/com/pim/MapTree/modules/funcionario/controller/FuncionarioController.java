@@ -32,7 +32,7 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateFuncionario(@Valid @RequestBody FuncionarioDTO dto, @PathVariable UUID id) {
+    public ResponseEntity<Object> updateFuncionario(@RequestBody FuncionarioDTO dto, @PathVariable UUID id) {
         var updated = this.funcionarioUseCase.updateFuncionario(id, dto);
         return ResponseEntity.ok(updated);
     }

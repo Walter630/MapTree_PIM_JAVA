@@ -28,9 +28,12 @@ public class FuncionarioUseCase {
             this.funcionarioRepository.findByCpfOrEmail(funcionario.cpf(), funcionario.email())
                     .ifPresent(e -> {throw new CPFOrEmailIsExisting("Cpf ou Email ja existente");
                     });
+            if (funcionario.role() == Roles.ADMIN) {
+                throw new IllegalArgumentException("Perfil ADMIN nao pode ser usado para funcionario");
+            }
             var dto = funcionario.role() == null
-                    ? new FuncionarioDTO(funcionario.name(), funcionario.email(), funcionario.email(),
-                    funcionario.password(), funcionario.phone(), Roles.GESTOR)
+                    ? new FuncionarioDTO(funcionario.name(), funcionario.email(), funcionario.cpf(),
+                    funcionario.password(), funcionario.phone(), Roles.USER)
                     : funcionario;
 
             var entity = funcionarioMapper.toEntity(dto);
@@ -50,6 +53,9 @@ public class FuncionarioUseCase {
         var entityExisting = this.funcionarioRepository.findById(id)
                 .orElseThrow(() -> new FuncionarioNotFound("Nao encontrado"));
 
+        if (funcionario.role() == Roles.ADMIN) {
+            throw new IllegalArgumentException("Perfil ADMIN nao pode ser usado para funcionario");
+        }
         funcionarioMapper.toDTOUpdate(funcionario, entityExisting);
         //salvo a entidade e returno transformando em dto
         var savedEntity = this.funcionarioRepository.save(entityExisting);

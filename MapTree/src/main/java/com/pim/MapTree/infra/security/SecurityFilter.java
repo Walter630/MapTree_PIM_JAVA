@@ -25,8 +25,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(null);
         String header = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            assert header != null;
+        if (header != null && header.startsWith("Bearer ")) {
             String token = header.replace("Bearer ", "");
 
             var subjectToken = this.jwtProvider.validadeToken(token);

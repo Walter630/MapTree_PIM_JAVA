@@ -1,5 +1,6 @@
 package com.pim.MapTree.modules.user.controller;
 
+import com.pim.MapTree.modules.user.dto.LoginResponse;
 import com.pim.MapTree.modules.user.dto.UserDTO;
 import com.pim.MapTree.modules.user.entity.User;
 import com.pim.MapTree.modules.user.useCase.UserService;
@@ -10,9 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,9 +33,23 @@ public class UserAuthController {
             @ApiResponse(responseCode = "400", description = "Invalidade Credentials")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> create(@RequestBody UserDTO authFuncionarioDTO) {
+    public ResponseEntity<LoginResponse> create(@RequestBody UserDTO authFuncionarioDTO) {
         var token = this.userService.execute(authFuncionarioDTO);
         return ResponseEntity.ok(token);
+    }
+
+    @GetMapping("/verify-token")
+    public ResponseEntity<Map<String, Boolean>> verifyToken(Authentication authentication) {
+        return ResponseEntity.ok(Map.of("valid", authentication != null && authentication.isAuthenticated()));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, String>> refreshToken(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(Map.of("accessToken", authorization.replace("Bearer ", "")));
     }
 
     //────────────────────────────REGISTER─────────────────────────────────────
@@ -43,6 +60,7 @@ public class UserAuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO authFuncionarioDTO) {
         var result = this.userService.register(authFuncionarioDTO);
+        System.out.println(result);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
     //────────────────────────────LIST─────────────────────────────────────

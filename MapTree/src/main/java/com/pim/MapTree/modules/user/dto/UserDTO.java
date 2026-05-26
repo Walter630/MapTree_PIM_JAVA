@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class UserDTO {
@@ -21,4 +23,5 @@ public class UserDTO {
     private String password;
 
     private Roles role;
+
 }

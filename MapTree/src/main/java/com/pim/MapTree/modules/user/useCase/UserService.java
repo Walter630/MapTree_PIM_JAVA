@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.pim.MapTree.infra.exception.user.InvalidCredentialException;
 import com.pim.MapTree.infra.exception.user.UserExisting;
 import com.pim.MapTree.infra.exception.user.UserNotFound;
+import com.pim.MapTree.modules.user.dto.LoginResponse;
 import com.pim.MapTree.modules.user.dto.UserDTO;
 import com.pim.MapTree.modules.user.entity.Roles;
 import com.pim.MapTree.modules.user.mapper.UserMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public String execute(UserDTO userDTO) {
+    public LoginResponse execute(UserDTO userDTO) {
         //verifica se existe um nome do funcionário
         var user = this.userRepository.findByEmail(userDTO.getEmail()).orElseThrow(
                 () -> new UserNotFound("User not Found"));
@@ -45,11 +47,19 @@ public class UserService {
         }
         // se for igual -> gera o toke
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        return JWT.create()
+        var token = JWT.create()
                 .withIssuer("maptree_db")
                 .withExpiresAt(Instant.now().plus(Duration.ofMinutes(10)))//tempo de expiraaco do token
                 .withSubject(user.getId().toString())
                 .sign(algorithm);
+        return new LoginResponse(
+                token,
+                new LoginResponse.UserResponseDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getRole()
+                )
+        );
     }
 
     @Transactional
@@ -71,4 +81,15 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
- }
+
+    public LoginResponse.UserResponseDTO findCurrentUser(String userId) {
+        var user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new UserNotFound("User not Found"));
+
+        return new LoginResponse.UserResponseDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+}
