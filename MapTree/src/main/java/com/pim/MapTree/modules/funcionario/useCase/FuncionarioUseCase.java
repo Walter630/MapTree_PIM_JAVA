@@ -6,31 +6,34 @@ import com.pim.MapTree.modules.funcionario.dto.FuncionarioDTO;
 import com.pim.MapTree.modules.funcionario.mapper.FuncionarioMapper;
 import com.pim.MapTree.modules.funcionario.repository.FuncionarioRepository;
 import com.pim.MapTree.modules.user.entity.Roles;
-import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class FuncionarioUseCase {
 
     private final FuncionarioRepository funcionarioRepository;
     private final FuncionarioMapper funcionarioMapper;
-
-    public FuncionarioUseCase(FuncionarioRepository funcionarioRepository, FuncionarioMapper funcionarioMapper) {
-        this.funcionarioRepository = funcionarioRepository;
-        this.funcionarioMapper = funcionarioMapper;
-    }
 
     @Transactional //usar ele nos save, delete e update que altera o banco de dados
     public FuncionarioDTO execute(FuncionarioDTO funcionario) {
             this.funcionarioRepository.findByCpfOrEmail(funcionario.cpf(), funcionario.email())
                     .ifPresent(e -> {throw new CPFOrEmailIsExisting("Cpf ou Email ja existente");
                     });
+
             if (funcionario.role() == Roles.ADMIN) {
+                log.warn("Funcionario com o administrador {}", funcionario.role());
                 throw new IllegalArgumentException("Perfil ADMIN nao pode ser usado para funcionario");
             }
+
             var dto = funcionario.role() == null
                     ? new FuncionarioDTO(funcionario.name(), funcionario.email(), funcionario.cpf(),
                     funcionario.password(), funcionario.phone(), Roles.USER)
@@ -38,10 +41,12 @@ public class FuncionarioUseCase {
 
             var entity = funcionarioMapper.toEntity(dto);
             var savedEntity = this.funcionarioRepository.save(entity);
+            log.info("Funcionario salvo com sucesso: {}", savedEntity);
 
             return funcionarioMapper.toDTO(savedEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<FuncionarioDTO> findAll() {
         var listFuncionario = this.funcionarioRepository.findAll();
         return funcionarioMapper.toDTOList(listFuncionario);
@@ -56,6 +61,7 @@ public class FuncionarioUseCase {
         if (funcionario.role() == Roles.ADMIN) {
             throw new IllegalArgumentException("Perfil ADMIN nao pode ser usado para funcionario");
         }
+
         funcionarioMapper.toDTOUpdate(funcionario, entityExisting);
         //salvo a entidade e returno transformando em dto
         var savedEntity = this.funcionarioRepository.save(entityExisting);

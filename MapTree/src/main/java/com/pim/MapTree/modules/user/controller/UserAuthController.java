@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Authentication", description = "Cadastro e login de usuarios")
 public class UserAuthController {
 
@@ -38,11 +40,13 @@ public class UserAuthController {
         return ResponseEntity.ok(token);
     }
 
+    //────────────────────────────VERIFY─────────────────────────────────────
     @GetMapping("/verify-token")
     public ResponseEntity<Map<String, Boolean>> verifyToken(Authentication authentication) {
         return ResponseEntity.ok(Map.of("valid", authentication != null && authentication.isAuthenticated()));
     }
 
+    //────────────────────────────REFRESH─────────────────────────────────────
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, String>> refreshToken(@RequestHeader(value = "Authorization", required = false) String authorization) {
         if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -60,7 +64,7 @@ public class UserAuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO authFuncionarioDTO) {
         var result = this.userService.register(authFuncionarioDTO);
-        System.out.println(result);
+        log.info("registro de usuario: {}", authFuncionarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
     //────────────────────────────LIST─────────────────────────────────────
