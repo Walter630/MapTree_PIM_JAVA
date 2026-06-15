@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -13,9 +15,9 @@ public record EmpresaDTO(
         @NotBlank(message = "O nome é obrigatorio")
         String nome,
         @NotBlank(message = "O CNPJ deve possuir 14 caracteres")
-        @Size(min = 14, max = 14, message = "O CNPJ deve possuir 14 caracteres") // CNPJ são 14, CPF são 11 ;)
+        @CNPJ(message = " O cnpj informado é invalido")
         String cnpj,
-        @NotBlank(message = "O endereço não pode ser vazio")
+        @Nullable
         String endereco,
         @NotBlank(message = "O telefone é obrigatório")
         @Size(min = 10, max = 15, message = "Telefone inválido") // cobre (DD) + número com/sem 9
